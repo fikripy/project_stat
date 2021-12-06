@@ -28,5 +28,26 @@ def stat_main():
             statistic, p_value = stats.ttest_1samp(df, popmean = popmean)
             st.write(f'dengan Uji One sample T test dan rerata pembangingnya {popmean}')
             st.write('didapatkan nilai p value = {:.2f}'.format(p_value[0])
-print('bisa dong')
+        elif df.shape[1] == 2:
+            Hubungan = st.sidebar.radio()
+                'Hubungan Grup', ['Berpasangan', 'Tidak Berpasangan']
+            )
+            stat_normal, p_value_normal = stats.shapiro(df.iloc[:, 0] - df.iloc[:, 1])
+            stat_levene, p_value_levene = stats.levene(df.iloc[:, 0], df.iloc[:, 1])
+            if p_value_levene > .5:
+                if Hubungan == 'Berpasangan' and p_value_normal > .05:
+                    statistic, p_value = stats.ttest_rel(df.iloc[:, 0], df.iloc[:, 1])
+                    st.write('p value normal = {:.2f}'.format(p_value_normal))
+                    st.write('dengan Uji T Test Berpasangan')
+                    st.write('didapatkan nilai p value = {:.2f}'.format(p_value))
+                elif Hubungan == 'Berpasangan' and p_value_normal <= .05:
+                    statistic, p_value = stats.mannwhitneyu(df.iloc[:,0], df.iloc[:, 1])
+                    st.write('p value normal {:.2f}'.format(p_value_normal))
+                    st.write('dengan Uji Mann WhitneyU Test Berpasangan')
+                    st.write('didapatkan p value = {:.2f}'.format(p_value))
+                #elif Hubungan == 'Tidak Berpasangan' and 
+    else:
+        st.stop()
+if __name__ == '__main__':
+    stat_main()
 
